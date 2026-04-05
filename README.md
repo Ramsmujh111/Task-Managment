@@ -138,8 +138,3 @@ page, limit, status, priority, search, sortBy, sortOrder
 - ✅ Toast notifications
 - ✅ Docker Compose setup
 - ✅ GitHub Actions CI/CD pipeline
-
-## 🔮 Bonus Features (to add next)
-- Redis caching for task list queries
-- WebSocket (Socket.io) real-time updates
-- Admin panel with user management
