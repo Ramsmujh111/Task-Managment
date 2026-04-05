@@ -1,6 +1,6 @@
-# TaskFlow – Full-Stack Task Management System
+# TaskFlow – Task Management System
 
-A production-ready, interview-level task management system built with **Node.js + TypeScript** backend and **Next.js (App Router)** frontend.
+A task management system built with **Node.js + TypeScript** backend and **Next.js (App Router)** frontend.
 
 ## 🏗️ Tech Stack
 
