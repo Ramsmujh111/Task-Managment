@@ -15,6 +15,15 @@ const envSchema = z.object({
   CORS_ORIGIN: z.string().default('http://localhost:3000'),
   RATE_LIMIT_WINDOW_MS: z.string().default('900000').transform(Number),
   RATE_LIMIT_MAX_REQUESTS: z.string().default('100').transform(Number),
+  // Frontend URL (for password reset links in emails)
+  FRONTEND_URL: z.string().default('http://localhost:3000'),
+  // SMTP settings (optional – omit in dev to use console logging)
+  SMTP_HOST: z.string().optional(),
+  SMTP_PORT: z.string().optional().transform((v) => (v ? Number(v) : undefined)),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+  SMTP_FROM: z.string().optional().default('noreply@taskflow.app'),
+  SMTP_IS_DEV: z.string().optional().default('yes'),
 });
 
 const parsed = envSchema.safeParse(process.env);

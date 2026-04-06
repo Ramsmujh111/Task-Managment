@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { authController } from '../controllers/auth.controller';
 import { validate } from '../middleware/validate';
 import { authenticate } from '../middleware/auth';
-import { RegisterDto, LoginDto, RefreshTokenDto } from '../dtos';
+import { RegisterDto, LoginDto, RefreshTokenDto, ForgotPasswordDto, ResetPasswordDto } from '../dtos';
 
 const router = Router();
 
@@ -20,5 +20,11 @@ router.post('/logout', validate(RefreshTokenDto), authController.logout);
 
 // GET /auth/me (protected)
 router.get('/me', authenticate, authController.me);
+
+// POST /auth/forgot-password
+router.post('/forgot-password', validate(ForgotPasswordDto), authController.forgotPassword);
+
+// POST /auth/reset-password
+router.post('/reset-password', validate(ResetPasswordDto), authController.resetPassword);
 
 export default router;

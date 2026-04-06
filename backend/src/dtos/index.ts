@@ -22,6 +22,20 @@ export const RefreshTokenDto = z.object({
   refreshToken: z.string().min(1, 'Refresh token is required'),
 });
 
+export const ForgotPasswordDto = z.object({
+  email: z.string().email('Invalid email address'),
+});
+
+export const ResetPasswordDto = z.object({
+  token: z.string().min(1, 'Reset token is required'),
+  newPassword: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one digit'),
+});
+
 // ─── Task DTOs ───────────────────────────────────────────────────────────────
 
 export const CreateTaskDto = z.object({
@@ -52,6 +66,8 @@ export const TaskFilterDto = z.object({
 
 export type RegisterInput = z.infer<typeof RegisterDto>;
 export type LoginInput = z.infer<typeof LoginDto>;
+export type ForgotPasswordInput = z.infer<typeof ForgotPasswordDto>;
+export type ResetPasswordInput = z.infer<typeof ResetPasswordDto>;
 export type CreateTaskInput = z.infer<typeof CreateTaskDto>;
 export type UpdateTaskInput = z.infer<typeof UpdateTaskDto>;
 export type TaskFilterInput = z.infer<typeof TaskFilterDto>;

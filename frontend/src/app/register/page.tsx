@@ -30,11 +30,25 @@ export default function RegisterPage() {
   const { register: registerUser } = useAuth();
   const router = useRouter();
   const [showPwd, setShowPwd] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<Form>({
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<Form>({
     resolver: zodResolver(schema),
   });
+
+  const passwordValue = watch('password', '');
+
+  // Strength indicator
+  const checks = [
+    { label: '8+ characters', ok: passwordValue.length >= 8 },
+    { label: 'Uppercase letter', ok: /[A-Z]/.test(passwordValue) },
+    { label: 'Lowercase letter', ok: /[a-z]/.test(passwordValue) },
+    { label: 'Number', ok: /[0-9]/.test(passwordValue) },
+  ];
+  const strengthScore = checks.filter((c) => c.ok).length;
+  const strengthColors = ['#ef4444', '#f59e0b', '#f59e0b', '#10b981', '#10b981'];
+  const strengthLabels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
 
   const onSubmit = async (data: Form) => {
     setIsLoading(true);
@@ -94,12 +108,81 @@ export default function RegisterPage() {
               </button>
             </div>
             {errors.password && <span className="form-error">{errors.password.message}</span>}
+
+            {/* Password strength bar */}
+            {passwordValue.length > 0 && (
+              <div style={{ marginTop: 8 }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: 4,
+                    marginBottom: 6,
+                  }}
+                >
+                  {[1, 2, 3, 4].map((i) => (
+                    <div
+                      key={i}
+                      style={{
+                        flex: 1,
+                        height: 3,
+                        borderRadius: 4,
+                        background: i <= strengthScore ? strengthColors[strengthScore] : 'var(--color-surface-3)',
+                        transition: 'background 0.3s ease',
+                      }}
+                    />
+                  ))}
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                    {checks.map((c) => (
+                      <span
+                        key={c.label}
+                        style={{
+                          fontSize: 11,
+                          color: c.ok ? 'var(--color-success)' : 'var(--color-text-subtle)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 3,
+                          transition: 'color 0.2s ease',
+                        }}
+                      >
+                        {c.ok ? '✓' : '○'} {c.label}
+                      </span>
+                    ))}
+                  </div>
+                  {strengthScore > 0 && (
+                    <span
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 600,
+                        color: strengthColors[strengthScore],
+                      }}
+                    >
+                      {strengthLabels[strengthScore]}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="form-group">
             <label className="form-label" htmlFor="confirmPassword">Confirm Password</label>
-            <input id="confirmPassword" type={showPwd ? 'text' : 'password'} placeholder="Re-enter password"
-              className={`form-input${errors.confirmPassword ? ' error' : ''}`} {...register('confirmPassword')} maxLength={50} />
+            <div style={{ position: 'relative' }}>
+              <input
+                id="confirmPassword"
+                type={showConfirm ? 'text' : 'password'}
+                placeholder="Re-enter password"
+                className={`form-input${errors.confirmPassword ? ' error' : ''}`}
+                style={{ paddingRight: 44 }}
+                {...register('confirmPassword')}
+                maxLength={50}
+              />
+              <button type="button" onClick={() => setShowConfirm(!showConfirm)}
+                style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-subtle)' }}>
+                {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
             {errors.confirmPassword && <span className="form-error">{errors.confirmPassword.message}</span>}
           </div>
 

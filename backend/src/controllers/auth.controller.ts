@@ -50,4 +50,23 @@ export const authController = {
       next(err);
     }
   },
+
+  async forgotPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      await authService.forgotPassword(req.body);
+      // Always return 200 to avoid exposing whether the email is registered
+      sendSuccess(res, null, 'If that email exists, a reset link has been sent');
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async resetPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      await authService.resetPassword(req.body);
+      sendSuccess(res, null, 'Password reset successfully. Please log in with your new password.');
+    } catch (err) {
+      next(err);
+    }
+  },
 };
